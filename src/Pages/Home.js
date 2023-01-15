@@ -1,7 +1,7 @@
 import React from "react";
 import EmailCard from "../Components/EmailCard";
 
-const EmailLists = () => {
+const Home = () => {
   const emailData = {
     id: "1",
     from: { email: "bounced@flipkart.com", name: "bounced" },
@@ -15,7 +15,7 @@ const EmailLists = () => {
 
   return (
     <div className="mx-20 my-10">
-      <header className="font-medium text-xl flex gap-12 mb-5">
+      <header className="font-medium text-lg flex gap-12 mb-5">
         <span>Filter By:</span>
         <span >Unread</span>
         <span className={activeStyle}>Read</span>
@@ -26,4 +26,4 @@ const EmailLists = () => {
   );
 };
 
-export default EmailLists;
+export default Home;

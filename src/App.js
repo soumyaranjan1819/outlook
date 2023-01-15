@@ -1,9 +1,9 @@
-import EmailLists from "./Pages/EmailLists";
+import Home from "./Pages/Home";
 
 function App() {
   return (
     <div>
-      <EmailLists/>
+      <Home/>
     </div>
   );
 }
