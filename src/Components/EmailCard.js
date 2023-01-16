@@ -1,10 +1,17 @@
 import React from "react";
+import { useDispatch } from "react-redux";
+import { setReadStatus } from "../Store/emailsDataSlice";
 
 const EmailCard = ({ emailData }) => {
+  const dispatch = useDispatch();
   const date = new Date(emailData.date);
+  const handleClick=()=>{
+    dispatch(setReadStatus(emailData))
+    console.log({...emailData})
+  }
 
   return (
-    <div className="flex items-start gap-4 border-[#cfd2dc] border-[1.25px] px-5 py-1 rounded-md">
+    <div className="flex items-start gap-4 border-[#cfd2dc] border-[1.25px] px-5 py-1 rounded-md cursor-pointer" onClick={()=>handleClick()}>
       <span className=" uppercase text-xl font-semibold text-white bg-[#e54065] px-3 py-1 mt-1 rounded-full">
         {emailData.from.name.charAt(0)}
       </span>
