@@ -9,7 +9,7 @@ export const STATUSES = Object.freeze({
 
 const initialState = {
   data: [],
-  status: STATUSES.IDLE,
+  status: STATUSES.IDLE
 };
 
 export const emailsDataSlice = createSlice({
@@ -18,7 +18,9 @@ export const emailsDataSlice = createSlice({
   reducers: {
     setData: (state, action) => {
       state.data = action.payload;
-      state.data.forEach((obj) => (obj.readStatus = "unread"));
+      state.data.forEach(
+        (obj) => ((obj.readStatus = "unread"), (obj.favourite = false))
+      );
     },
     setStatus: (state, action) => {
       state.status = action.payload;
