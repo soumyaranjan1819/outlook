@@ -9,7 +9,8 @@ export const STATUSES = Object.freeze({
 
 const initialState = {
   data: [],
-  status: STATUSES.IDLE
+  status: STATUSES.IDLE,
+  mailId:1
 };
 
 export const emailsDataSlice = createSlice({

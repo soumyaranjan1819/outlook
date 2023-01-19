@@ -10,18 +10,20 @@ const EmailCard = ({ emailData }) => {
     dispatch(setReadStatus(emailData));
   };
 
+  let unreadMsg=(emailData.readStatus==='unread')? `border-l-[#e54065] border-l-4 `:``
+
   return (
     <NavLink
-      to={`/`}
+      to={`/inbox/${emailData.id}`}
     >
       <div
-        className="flex items-start gap-4 border-[#cfd2dc] border-[1.25px] px-5 py-1 rounded-md cursor-pointer"
+        className={`flex items-start gap-4 border-[#cfd2dc] border-[1.25px] px-5 py-1 rounded-md cursor-pointer ${unreadMsg} `}
         onClick={() => handleClick()}
       >
         <span className=" uppercase text-xl font-semibold text-white bg-[#e54065] w-[35px] h-[35px] mt-1 rounded-full flex justify-center items-center">
           {emailData.from.name.charAt(0)}
         </span>
-        <div>
+        <div className="text-sm" >
           <p>
             <span>From: </span>
             <span className=" capitalize font-medium">
@@ -44,9 +46,8 @@ const EmailCard = ({ emailData }) => {
           </span>
           {(emailData.favourite)?<span className=" text-sm font-semibold text-[#e54065] ml-10">
             favorite
-          </span>:''}
-          
-        </div>
+          </span>:''} 
+        </div>   
       </div>
     </NavLink>
   );

@@ -7,9 +7,20 @@ import { STATUSES } from "../Store/emailsDataSlice";
 import loading from "../loading.gif";
 
 const Inbox = () => {
-  const [filterType, setFilterType] = useState("");
+  const [filterType, setFilterType] = useState("all");
   const dispatch = useDispatch();
   const { data, status } = useSelector((state) => state.emails);
+
+  const filteredInbox=()=>{
+    let inbox = data;
+    
+    if(filterType === 'favourite')
+    inbox = data.filter((i) => i.favourite === true);
+
+    if(filterType !== 'all')
+    inbox = data.filter((i) => i.readStatus === filterType);
+    return inbox
+  }
 
   useEffect(() => {
     dispatch(fetchEmailsData());
@@ -25,16 +36,28 @@ const Inbox = () => {
 
   const handleChange = (event) => {
     setFilterType(event.target.value);
-    console.log(event);
   };
-  // console.log(filterType);
-
-  let inbox = data.filter((i) => i.readStatus === filterType);
 
   return (
     <div className="mx-20 my-10">
-      <header className="font-medium text-lg flex gap-7 mb-5">
+      <header className="font-medium text-base flex gap-4 mb-5">
         <span>Filter By:</span>
+
+        <span>
+          <input
+            type="radio"
+            name="filter"
+            id="all"
+            value="all"
+            onChange={(e) => handleChange(e)}
+            className="appearance-none"
+            checked ={(filterType==='all')}
+          />
+          <label htmlFor="all" className=" px-2.5 py-1 rounded-2xl cursor-pointer">
+            All
+          </label>
+        </span>
+
         <span>
           <input
             type="radio"
@@ -43,11 +66,13 @@ const Inbox = () => {
             value="unread"
             onChange={(e) => handleChange(e)}
             className="appearance-none"
+            // checked ={(filterType==='unread'?true:false)}
           />
           <label htmlFor="unread" className=" px-2.5 py-1 rounded-2xl cursor-pointer">
             Unread
           </label>
         </span>
+
         <span>
           <input
             type="radio"
@@ -61,6 +86,7 @@ const Inbox = () => {
             Read
           </label>
         </span>
+
         <span>
           <input
             type="radio"
@@ -76,8 +102,8 @@ const Inbox = () => {
         </span>
       </header>
       <section className="flex flex-col gap-3">
-        {inbox.map((item) => (
-          <EmailCard emailData={item} key={item.id} />
+        {filteredInbox().map((item) => (
+          <EmailCard emailData={item} key={item.id} id={item.id} />
         ))}
       </section>
     </div>
