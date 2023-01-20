@@ -2,25 +2,30 @@ import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import "./Inbox.css";
 import EmailCard from "../Components/EmailCard/EmailCard";
-import { fetchEmailsData } from "../Store/emailsDataSlice";
+import { fetchEmailsData, setMailOpen } from "../Store/emailsDataSlice";
 import { STATUSES } from "../Store/emailsDataSlice";
 import loading from "../loading.gif";
+import EmailBody from "../Components/EmailBody/EmailBody";
 
 const Inbox = () => {
   const [filterType, setFilterType] = useState("all");
   const dispatch = useDispatch();
-  const { data, status } = useSelector((state) => state.emails);
 
-  const filteredInbox=()=>{
+  const { data, status, mailOpen } = useSelector((state) => state.emails);
+
+  const filteredInbox = () => {
     let inbox = data;
-    
-    if(filterType === 'favourite')
-    inbox = data.filter((i) => i.favourite === true);
 
-    if(filterType !== 'all')
-    inbox = data.filter((i) => i.readStatus === filterType);
-    return inbox
-  }
+    if (filterType === "favourites")
+      inbox = data.filter((i) => i.favourite === true);
+
+    if (filterType === "unread" )
+      inbox = data.filter((i) => i.readStatus === filterType);
+
+    if (filterType === "read" )
+      inbox = data.filter((i) => i.readStatus === filterType);
+    return inbox;
+  };
 
   useEffect(() => {
     dispatch(fetchEmailsData());
@@ -36,10 +41,14 @@ const Inbox = () => {
 
   const handleChange = (event) => {
     setFilterType(event.target.value);
+    dispatch(setMailOpen(false));
   };
 
+  let inboxWidth = mailOpen ? "w-[40vw]" : "w-[90vw]";
+  let openMail = mailOpen ? "bold" : "hidden";
+
   return (
-    <div className="mx-20 my-10">
+    <div className="mx-20 my-10 bg-[#f5f4f9]">
       <header className="font-medium text-base flex gap-4 mb-5">
         <span>Filter By:</span>
 
@@ -51,9 +60,12 @@ const Inbox = () => {
             value="all"
             onChange={(e) => handleChange(e)}
             className="appearance-none"
-            checked ={(filterType==='all')}
+            checked={filterType === "all"}
           />
-          <label htmlFor="all" className=" px-2.5 py-1 rounded-2xl cursor-pointer">
+          <label
+            htmlFor="all"
+            className=" px-2.5 py-1 rounded-2xl cursor-pointer"
+          >
             All
           </label>
         </span>
@@ -66,9 +78,11 @@ const Inbox = () => {
             value="unread"
             onChange={(e) => handleChange(e)}
             className="appearance-none"
-            // checked ={(filterType==='unread'?true:false)}
           />
-          <label htmlFor="unread" className=" px-2.5 py-1 rounded-2xl cursor-pointer">
+          <label
+            htmlFor="unread"
+            className=" px-2.5 py-1 rounded-2xl cursor-pointer"
+          >
             Unread
           </label>
         </span>
@@ -82,7 +96,10 @@ const Inbox = () => {
             onChange={(e) => handleChange(e)}
             className="appearance-none"
           />
-          <label htmlFor="read" className=" px-2.5 py-1 rounded-2xl cursor-pointer">
+          <label
+            htmlFor="read"
+            className=" px-2.5 py-1 rounded-2xl cursor-pointer"
+          >
             Read
           </label>
         </span>
@@ -91,20 +108,26 @@ const Inbox = () => {
           <input
             type="radio"
             name="filter"
-            id="favorites"
-            value="favorites"
+            id="favourites"
+            value="favourites"
             onChange={(e) => handleChange(e)}
             className="appearance-none"
           />
-          <label htmlFor="favorites" className=" px-2.5 py-1 rounded-2xl cursor-pointer">
-            Favorites
+          <label
+            htmlFor="favourites"
+            className=" px-2.5 py-1 rounded-2xl cursor-pointer"
+          >
+            Favourites
           </label>
         </span>
       </header>
-      <section className="flex flex-col gap-3">
-        {filteredInbox().map((item) => (
-          <EmailCard emailData={item} key={item.id} id={item.id} />
-        ))}
+      <section className="flex lg:gap-10">
+        <section className={` ${inboxWidth} flex flex-col gap-3`}>
+          {filteredInbox().map((item) => (
+            <EmailCard emailData={item} key={item.id} id={item.id} />
+          ))}
+        </section>
+        {mailOpen ? <EmailBody /> : ""}
       </section>
     </div>
   );

@@ -10,7 +10,8 @@ export const STATUSES = Object.freeze({
 const initialState = {
   data: [],
   status: STATUSES.IDLE,
-  mailId:1
+  mailOpen: false,
+  currentMail: {},
 };
 
 export const emailsDataSlice = createSlice({
@@ -30,10 +31,27 @@ export const emailsDataSlice = createSlice({
       let index = state.data.findIndex((obj) => obj.id === action.payload.id);
       state.data[index].readStatus = "read";
     },
+    setFavourite: (state, action) => {
+      let index = state.data.findIndex((obj) => obj.id === action.payload);
+      state.data[index].favourite = true;
+    },
+    setMailOpen: (state, action) => {
+      state.mailOpen = action.payload;
+    },
+    setCurrentMail: (state, action) => {
+      state.currentMail = action.payload;
+    },
   },
 });
 
-export const { setData, setStatus, setReadStatus } = emailsDataSlice.actions;
+export const {
+  setData,
+  setStatus,
+  setReadStatus,
+  setMailOpen,
+  setCurrentMail,
+  setFavourite,
+} = emailsDataSlice.actions;
 export default emailsDataSlice.reducer;
 
 // Thunk

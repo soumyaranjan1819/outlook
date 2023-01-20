@@ -1,29 +1,38 @@
-import React from "react";
+import React, { useState } from "react";
 import { useDispatch } from "react-redux";
-import { NavLink } from "react-router-dom";
-import { setReadStatus } from "../../Store/emailsDataSlice";
+import {
+  setReadStatus,
+  setMailOpen,
+  setCurrentMail,
+} from "../../Store/emailsDataSlice";
 
 const EmailCard = ({ emailData }) => {
   const dispatch = useDispatch();
-  const date = new Date(emailData.date);
+
   const handleClick = () => {
     dispatch(setReadStatus(emailData));
+    dispatch(setMailOpen(true));
+    dispatch(setCurrentMail(emailData));
   };
 
-  let unreadMsg=(emailData.readStatus==='unread')? `border-l-[#e54065] border-l-4 `:``
+  const date = new Date(emailData.date);
+  let minute = date.getMinutes();
+  let paddedMinute =
+    `${minute}`.length > 1 ? minute : String(minute).padStart(2, "0");
+
+  let unreadMsg =
+    emailData.readStatus === "unread" ? `border-l-[#e54065] border-l-4 ` : ``;
 
   return (
-    <NavLink
-      to={`/inbox/${emailData.id}`}
-    >
+    <div>
       <div
         className={`flex items-start gap-4 border-[#cfd2dc] border-[1.25px] px-5 py-1 rounded-md cursor-pointer ${unreadMsg} `}
         onClick={() => handleClick()}
       >
-        <span className=" uppercase text-xl font-semibold text-white bg-[#e54065] w-[35px] h-[35px] mt-1 rounded-full flex justify-center items-center">
+        <span className=" uppercase text-xl font-semibold text-white bg-[#e54065] min-w-[35px] min-h-[35px] mt-1 rounded-full flex justify-center items-center">
           {emailData.from.name.charAt(0)}
         </span>
-        <div className="text-sm" >
+        <div className="text-sm">
           <p>
             <span>From: </span>
             <span className=" capitalize font-medium">
@@ -40,16 +49,20 @@ const EmailCard = ({ emailData }) => {
             {date.getDate()}/{date.getMonth()}/{date.getFullYear()}
             <span className="ml-2 ">
               {date.getHours() > 12 ? date.getHours() - 12 : date.getHours()}:
-              {date.getMinutes()}
+              {paddedMinute}
               {date.getHours() > 12 ? `pm` : `am`}
             </span>
           </span>
-          {(emailData.favourite)?<span className=" text-sm font-semibold text-[#e54065] ml-10">
-            favorite
-          </span>:''} 
-        </div>   
+          {emailData.favourite ? (
+            <span className=" text-sm font-semibold text-[#e54065] ml-10">
+              favorite
+            </span>
+          ) : (
+            ""
+          )}
+        </div>
       </div>
-    </NavLink>
+    </div>
   );
 };
 
